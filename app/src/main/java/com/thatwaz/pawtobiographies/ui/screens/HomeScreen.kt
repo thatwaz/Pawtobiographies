@@ -1,7 +1,6 @@
 package com.thatwaz.pawtobiographies.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thatwaz.pawtobiographies.R
 
@@ -48,7 +45,12 @@ val mockPets = listOf(
 
 
 @Composable
-fun HomeScreen(pets: List<Pet>, onAddPet: () -> Unit, onPetClick: (Pet) -> Unit) {
+fun HomeScreen(
+    myPets: List<Pet>, // List of your pets
+    friendsPets: List<Pet>, // List of friends' pets
+    onAddPet: () -> Unit, // Action for adding your pet
+    onPetClick: (Pet) -> Unit // Action for navigating to pet details
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -60,39 +62,48 @@ fun HomeScreen(pets: List<Pet>, onAddPet: () -> Unit, onPetClick: (Pet) -> Unit)
             }
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.background) // Set background color
+        LazyColumn(
+            contentPadding = PaddingValues(
+                start = 8.dp,
+                top = paddingValues.calculateTopPadding() + 8.dp,
+                end = 8.dp,
+                bottom = paddingValues.calculateBottomPadding() + 8.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp) // Space between sections
         ) {
-            Text(
-                text = "My Pets",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary, // Use primary color
-                modifier = Modifier.padding(16.dp)
-            )
-
-            if (pets.isEmpty()) {
+            // Section for My Pets
+            item {
                 Text(
-                    text = "No pets yet! Add your first pet to get started.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground, // Use onBackground color
-                    modifier = Modifier.padding(16.dp)
+                    text = "My Pets",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(8.dp), // Padding around the list
-                    verticalArrangement = Arrangement.spacedBy(8.dp) // Space between cards
-                ) {
-                    items(pets) { pet ->
-                        PetCard(pet, onPetClick)
-                    }
+            }
+            items(myPets) { pet ->
+                PetCard(pet, onPetClick)
+            }
+
+            // Section for Friends' Pets
+            if (friendsPets.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Pawesome Friends", // Fun title for friends' pets
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+                items(friendsPets) { pet ->
+                    PetCard(pet, onPetClick)
                 }
             }
         }
     }
 }
+
+
+
 
 @Composable
 fun PetCard(pet: Pet, onClick: (Pet) -> Unit) {
@@ -141,14 +152,14 @@ fun PetCard(pet: Pet, onClick: (Pet) -> Unit) {
 
 
 
-// Preview to visualize the mock UI
-@Composable
-@Preview(showBackground = true)
-fun PreviewHomeScreen() {
-    HomeScreen(
-        pets = mockPets,
-        onAddPet = { /* No-op */ },
-        onPetClick = { /* No-op */ }
-    )
-}
+//// Preview to visualize the mock UI
+//@Composable
+//@Preview(showBackground = true)
+//fun PreviewHomeScreen() {
+//    HomeScreen(
+//        pets = mockPets,
+//        onAddPet = { /* No-op */ },
+//        onPetClick = { /* No-op */ }
+//    )
+//}
 
