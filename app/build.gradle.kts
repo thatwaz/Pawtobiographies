@@ -56,10 +56,13 @@ android {
                 "META-INF/LICENSE.txt",
                 "META-INF/NOTICE.md",
                 "META-INF/NOTICE.txt",
-                "/META-INF/{AL2.0,LGPL2.1}"
+                "META-INF/LICENSE-notice.md", // Add the specific file causing the conflict
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1"
             )
         }
     }
+
 }
 
 dependencies {
@@ -110,6 +113,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")
     kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // Coil for photos
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 
     // Unit Testing dependencies
     testImplementation(libs.junit)
